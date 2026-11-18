@@ -30,7 +30,7 @@
                     @endif
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="text-sm text-red-200 hover:text-white underline">Salir</button>
+                        <button type="submit" class="text-sm text-red-200 hover:text-white underline">Cerrar Sesion</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-lg text-sm font-medium transition">

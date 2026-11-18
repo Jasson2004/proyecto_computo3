@@ -44,8 +44,11 @@
                         <td class="px-5 py-3.5 font-bold text-slate-900">{{ $category->name }}</td>
                         <td class="px-5 py-3.5 text-xs text-slate-600">{{ $category->min_content_guide }}</td>
                         <td class="px-5 py-3.5 text-center">{{ $category->posts_count }}</td>
-                        <td class="px-5 py-3.5 text-right">
-                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('¿Eliminar categoría?')">
+                        <td class="px-5 py-3.5 text-right space-x-3">
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-indigo-700 font-semibold hover:underline text-xs">
+                                Editar
+                            </a>
+                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar categoría?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="text-red-700 font-semibold hover:underline text-xs">Eliminar</button>
                             </form>

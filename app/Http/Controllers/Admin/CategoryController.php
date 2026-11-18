@@ -26,13 +26,19 @@ class CategoryController extends Controller
         return back()->with('success', 'Categoría creada exitosamente.');
     }
 
+    public function edit(Category $category): View
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
     public function update(CategoryRequest $request, Category $category): RedirectResponse
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
         $category->update($data);
 
-        return back()->with('success', 'Categoría actualizada correctamente.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Categoría actualizada correctamente.');
     }
 
     public function destroy(Category $category): RedirectResponse

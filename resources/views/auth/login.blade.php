@@ -46,6 +46,13 @@
             <button type="submit" class="w-full bg-red-900 hover:bg-red-800 text-white font-bold py-2.5 rounded-lg transition shadow">
                 Ingresar al Sistema
             </button>
+
+            <div class="text-center pt-3 border-t border-slate-100 text-sm text-slate-600">
+                ¿Aún no tienes cuenta?
+                <a href="{{ route('register') }}" class="text-red-800 font-bold hover:underline">
+                    Regístrate aquí
+                </a>
+            </div>
         </form>
     </div>
 </body>

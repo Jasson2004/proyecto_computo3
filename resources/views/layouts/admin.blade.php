@@ -35,10 +35,14 @@
                class="block px-3.5 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.categories.*') ? 'bg-red-800 text-white' : 'hover:bg-slate-800' }}">
                 Categorías
             </a>
+            <a href="{{ route('admin.users.index') }}"
+               class="block px-3.5 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.users.*') ? 'bg-red-800 text-white' : 'hover:bg-slate-800' }}">
+                Usuarios y Roles
+            </a>
         </nav>
 
         <div class="p-4 border-t border-slate-800 text-xs text-slate-400">
-            <a href="{{ route('home') }}" target="_blank" class="text-amber-400 hover:underline block mb-3">
+            <a href="{{ route('home') }}" class="text-amber-400 hover:underline block mb-3">
                 Ver Blog Público ↗
             </a>
             <div class="font-semibold text-white">{{ auth()->user()->name }}</div>
@@ -55,7 +59,7 @@
                 <span class="text-xs bg-slate-100 border px-2.5 py-1 rounded-full font-semibold text-slate-700">
                     Rol: Administrador
                 </span>
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="text-sm text-red-700 hover:text-red-900 font-semibold">
                         Cerrar Sesión
