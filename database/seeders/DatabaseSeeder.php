@@ -14,17 +14,17 @@ class DatabaseSeeder extends Seeder
     {
         // Pareja de estudiantes administradores (Rúbrica: exactamente dos estudiantes por equipo)
         $student1 = User::create([
-            'name' => 'Carlos Hernández (Integrante 1)',
-            'carnet' => 'HH22015',
-            'email' => 'admin1@ues.edu.sv',
+            'name' => 'Juan Granados',
+            'carnet' => 'GA22021',
+            'email' => 'ga22021@ues.edu.sv',
             'password' => Hash::make('Sistemas2026!'),
             'role' => 'admin',
         ]);
 
         $student2 = User::create([
-            'name' => 'María López (Integrante 2)',
-            'carnet' => 'LL22048',
-            'email' => 'admin2@ues.edu.sv',
+            'name' => 'Jasson Sanchez',
+            'carnet' => 'SP23001',
+            'email' => 'sp23001@ues.edu.sv',
             'password' => Hash::make('Sistemas2026!'),
             'role' => 'admin',
         ]);
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         $post = Post::create([
             'user_id' => $student1->id,
             'category_id' => $ponencia->id,
-            'title' => 'Inauguración y Ponencia Magistral: Inteligencia Artificial Aplicada',
+            'title' => 'Inauguración y Ponencia Magistral:Investigacion Aplicada en IOT para Agricultura en El Salvador',
             'slug' => 'inauguracion-ponencia-ia-2026',
             'activity_date' => '2026-11-16',
             'excerpt' => 'Resumen de la jornada inaugural en la Facultad Multidisciplinaria Oriental sobre arquitecturas modernas.',
