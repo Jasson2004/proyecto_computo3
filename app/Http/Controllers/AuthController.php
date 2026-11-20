@@ -16,7 +16,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request): RedirectResponse
+   public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -26,11 +26,6 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            if (Auth::user()->isAdmin()) {
-                return redirect()->intended(route('admin.dashboard'))
-                    ->with('success', 'Bienvenido al panel administrativo de la Semana de Sistemas 2026.');
-            }
-
             return redirect()->intended(route('home'))
                 ->with('success', 'Sesión iniciada correctamente.');
         }
@@ -39,7 +34,6 @@ class AuthController extends Controller
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ])->onlyInput('email');
     }
-
     public function showRegister(): View
     {
         return view('auth.register');

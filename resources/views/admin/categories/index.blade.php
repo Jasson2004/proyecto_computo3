@@ -28,7 +28,7 @@
     </div>
 
     <!-- Tabla de Categorías -->
-    <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
         <table class="w-full text-sm text-left">
             <thead class="bg-slate-50 border-b text-xs uppercase text-slate-500">
                 <tr>
@@ -57,6 +57,11 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+    <div class="mt-3 md:hidden flex justify-center">
+      <p class="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full text-center">
+        ← Desliza la tabla horizontalmente para ver todas las columnas →
+      </p>
     </div>
 </div>
 @endsection

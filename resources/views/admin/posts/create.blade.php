@@ -72,25 +72,30 @@
 
     <!-- Evidencias Individuales -->
     <div class="border-t pt-6">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
-                <h3 class="font-bold text-slate-900">Evidencias Verificables de Asistencia (Por Integrante)</h3>
-                <p class="text-xs text-slate-500">Adjunta fotografías propias, constancias o capturas de registro por cada integrante.</p>
+                <h3 class="font-bold text-[#0A0F0B]">Evidencias Verificables de Asistencia (Por Integrante)</h3>
+                <p class="text-xs text-slate-500">Adjunta fotografías propias, constancias o capturas de registro por cada integrante. Puedes quitar cualquier bloque que no necesites.</p>
             </div>
-            <button type="button" onclick="addEvidenceRow()" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-700">
+            <button type="button" onclick="addEvidenceRow()" class="bg-[#0A0F0B] hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
                 + Agregar Evidencia
             </button>
         </div>
 
         <div id="evidences_container" class="space-y-3"></div>
+        <p id="no_evidences_msg" class="text-xs text-slate-400 italic bg-slate-50 border border-dashed border-slate-300 rounded-xl p-4 text-center">
+            No hay bloques de evidencia pendientes. Haz clic en "+ Agregar Evidencia" para adjuntar una prueba.
+        </p>
     </div>
 
     <div class="flex flex-wrap justify-end gap-3 pt-4 border-t">
-        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">Cancelar</a>
-        <button type="submit" name="action" value="draft" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm">
+        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50">
+            Cancelar
+        </a>
+        <button type="submit" name="action" value="draft" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-xl text-sm transition">
             Guardar como Borrador
         </button>
-        <button type="submit" name="action" value="published" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-lg text-sm">
+        <button type="submit" name="action" value="published" class="bg-[#5EA83A] hover:bg-[#4D8F2E] text-white font-bold px-5 py-2 rounded-xl text-sm transition shadow-sm">
             Publicar Ahora
         </button>
     </div>
@@ -107,35 +112,86 @@
     updateGuide();
 
     let evidenceIdx = 0;
+    const container = document.getElementById('evidences_container');
+    const emptyMsg = document.getElementById('no_evidences_msg');
+
+    function toggleEmptyMessage() {
+        emptyMsg.classList.toggle('hidden', container.children.length > 0);
+    }
+
     function addEvidenceRow() {
-        const container = document.getElementById('evidences_container');
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-50 p-3.5 rounded-lg border border-slate-200 items-end';
+        row.className = 'evidence-row relative bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm transition';
         row.innerHTML = `
-            <div class="md:col-span-4">
-                <label class="block text-xs font-semibold mb-1">Archivo de imagen *</label>
-                <input type="file" name="evidences[${evidenceIdx}][file]" accept="image/*" required class="w-full text-xs border bg-white p-1.5 rounded">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200/80">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-[#2E5B18]">
+                    Nueva Evidencia
+                </span>
+                <button type="button" onclick="removeEvidenceRow(this)"
+                        class="inline-flex items-center gap-1 text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-lg transition">
+                    ✕ Eliminar fila
+                </button>
             </div>
-            <div class="md:col-span-3">
-                <label class="block text-xs font-semibold mb-1">Integrante que acredita *</label>
-                <input type="text" name="evidences[${evidenceIdx}][participant_name]" placeholder="Nombre completo" required class="w-full text-xs border p-2 rounded">
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-xs font-semibold mb-1">Tipo *</label>
-                <select name="evidences[${evidenceIdx}][evidence_type]" class="w-full text-xs border p-2 rounded bg-white">
-                    <option value="fotografia">Fotografía</option>
-                    <option value="constancia">Constancia</option>
-                    <option value="asistencia">Asistencia</option>
-                </select>
-            </div>
-            <div class="md:col-span-3">
-                <label class="block text-xs font-semibold mb-1">Descripción breve</label>
-                <input type="text" name="evidences[${evidenceIdx}][caption]" placeholder="Ej. Participando en el taller" class="w-full text-xs border p-2 rounded">
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                <div class="md:col-span-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Archivo de imagen *</label>
+                    <div class="flex items-center gap-1.5">
+                        <input type="file" name="evidences[${evidenceIdx}][file]" accept="image/*" required
+                               onchange="toggleClearFileBtn(this)"
+                               class="w-full text-xs border border-slate-300 bg-white p-1.5 rounded-lg">
+                        <button type="button" onclick="clearFileInput(this)" title="Quitar archivo seleccionado"
+                                class="hidden clear-file-btn text-xs font-bold text-slate-600 hover:text-red-600 bg-white border border-slate-300 px-2 py-1.5 rounded-lg">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Integrante que acredita *</label>
+                    <input type="text" name="evidences[${evidenceIdx}][participant_name]" placeholder="Nombre completo" required
+                           class="w-full text-xs border border-slate-300 bg-white p-2 rounded-lg focus:ring-2 focus:ring-[#5EA83A] focus:outline-none">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tipo *</label>
+                    <select name="evidences[${evidenceIdx}][evidence_type]" class="w-full text-xs border border-slate-300 p-2 rounded-lg bg-white focus:ring-2 focus:ring-[#5EA83A] focus:outline-none">
+                        <option value="fotografia">Fotografía</option>
+                        <option value="constancia">Constancia</option>
+                        <option value="asistencia">Asistencia</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Descripción breve</label>
+                    <input type="text" name="evidences[${evidenceIdx}][caption]" placeholder="Ej. Participando en el taller"
+                           class="w-full text-xs border border-slate-300 bg-white p-2 rounded-lg focus:ring-2 focus:ring-[#5EA83A] focus:outline-none">
+                </div>
             </div>
         `;
         container.appendChild(row);
         evidenceIdx++;
+        toggleEmptyMessage();
     }
-    addEvidenceRow();
+
+    function removeEvidenceRow(button) {
+        const row = button.closest('.evidence-row');
+        if (row) {
+            row.remove();
+            toggleEmptyMessage();
+        }
+    }
+
+    function toggleClearFileBtn(input) {
+        const btn = input.parentElement.querySelector('.clear-file-btn');
+        if (btn) {
+            btn.classList.toggle('hidden', !input.value);
+        }
+    }
+
+    function clearFileInput(button) {
+        const input = button.parentElement.querySelector('input[type="file"]');
+        if (input) {
+            input.value = '';
+            button.classList.add('hidden');
+        }
+    }
 </script>
 @endsection

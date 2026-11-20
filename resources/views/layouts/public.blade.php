@@ -3,47 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Blog Semana de Sistemas 2026 | FMO - UES')</title>
+    <title>@yield('title', 'SDS 26 Green IoT | Blog Semana de Sistemas 2026')</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased">
-    <!-- Navbar -->
-    <header class="bg-red-900 text-white shadow-md sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<body class="bg-[#F6F9F6] text-[#0A0F0B] flex flex-col min-h-screen antialiased">
+    <!-- Navbar Blanco con Identidad SDS 26 + ASEIS -->
+    <header class="bg-white border-b-2 border-[#5EA83A] shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-amber-400 text-red-950 font-extrabold flex items-center justify-center text-lg shadow">
-                    SS26
-                </div>
-                <div>
-                    <span class="font-bold text-lg tracking-tight block leading-none">Semana de Sistemas 2026</span>
-                    <span class="text-xs text-red-200">UES • Facultad Multidisciplinaria Oriental</span>
-                </div>
+                <x-brand-logo size="sm" />
             </a>
 
             <nav class="flex items-center gap-4">
-                <a href="{{ route('home') }}" class="text-sm font-medium hover:text-amber-300 transition">Inicio</a>
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="bg-amber-400 text-red-950 px-3.5 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-300 transition">
-                            Panel Admin
-                        </a>
-                    @endif
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="text-sm text-red-200 hover:text-white underline">Cerrar Sesion</button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-lg text-sm font-medium transition">
-                        Acceso Equipo
+                <a href="{{ route('home') }}" class="text-sm font-bold text-[#0A0F0B] hover:text-[#5EA83A] transition">
+                    Inicio
+                </a>
+
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" class="bg-[#5EA83A] hover:bg-[#4D8F2E] text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">
+                        Panel Admin
                     </a>
-                @endauth
+                @endif
+
+                <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full hidden sm:inline">
+                    {{ auth()->user()->name }}
+                </span>
+
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="button" onclick="openLogoutModal()" class="text-sm font-semibold text-slate-600 hover:text-red-600 transition">
+                    Cerrar Sesion
+                </button>
+                </form>
             </nav>
         </div>
     </header>
 
     @if(session('success'))
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-            <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm">
+            <div class="bg-[#5EA83A]/15 border border-[#5EA83A] text-[#234712] px-4 py-3 rounded-xl text-sm font-medium">
                 {{ session('success') }}
             </div>
         </div>
@@ -53,11 +51,15 @@
         @yield('content')
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 py-8 mt-16">
+    <footer class="bg-[#0A0F0B] text-slate-400 py-8 mt-16 border-t-4 border-[#5EA83A]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-            <p>© 2026 Universidad de El Salvador — Facultad Multidisciplinaria Oriental.</p>
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#5EA83A]"></span>
+                <p class="text-white font-semibold">SDS 26 Green IoT — ASEIS • UES FMO</p>
+            </div>
             <p>Técnicas de Programación para Internet • Laravel 12</p>
         </div>
     </footer>
+    <x-logout-modal />
 </body>
 </html>

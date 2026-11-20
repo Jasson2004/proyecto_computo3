@@ -27,7 +27,7 @@ class BlogSystemTest extends TestCase
             'password' => 'Sistemas2026!',
         ]);
 
-        $response->assertRedirect(route('admin.dashboard'));
+        $response->assertRedirect(route('home'));
         $this->actingAs($admin)->get(route('admin.dashboard'))->assertStatus(200);
     }
 
