@@ -61,7 +61,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         @foreach($post->images as $evidence)
                             <figure class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-                                <img src="{{ asset('storage/' . $evidence->image_path) }}" alt="{{ $evidence->caption ?? 'Evidencia' }}" class="w-full h-56 object-cover">
+                                <img src="{{ asset('storage/' . $evidence->image_path) }}" alt="{{ $evidence->caption ?? 'Evidencia' }}" class="w-full h-56 object-cover cursor-zoom-in" onclick="abrirZoom(this.src, this.alt)">
                                 <figcaption class="p-4 text-sm">
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="font-bold text-slate-900">{{ $evidence->participant_name }}</span>
@@ -81,4 +81,49 @@
         </div>
     </div>
 </article>
+
+<div id="zoom-modal" class="fixed inset-0 z-50 hidden bg-black/90" onclick="cerrarZoom()">
+    <button type="button" class="absolute top-4 right-5 z-10 text-white text-4xl leading-none" onclick="cerrarZoom()" aria-label="Cerrar">&times;</button>
+    <div class="w-full h-full overflow-auto flex p-4">
+        <img id="zoom-img" src="" alt="" class="m-auto cursor-zoom-in" style="max-width:100%;max-height:100%;" onclick="event.stopPropagation(); alternarZoom()">
+    </div>
+    <p class="absolute bottom-3 left-0 right-0 text-center text-xs text-white/70 pointer-events-none">Toca la imagen para acercar o alejar. Toca fuera o presiona Esc para cerrar.</p>
+</div>
+<script>
+    var zoomActivo = false;
+    function abrirZoom(src, alt) {
+        var img = document.getElementById('zoom-img');
+        img.src = src;
+        img.alt = alt || 'Evidencia';
+        zoomActivo = false;
+        aplicarZoom();
+        document.getElementById('zoom-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    function cerrarZoom() {
+        document.getElementById('zoom-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    function alternarZoom() {
+        zoomActivo = !zoomActivo;
+        aplicarZoom();
+    }
+    function aplicarZoom() {
+        var img = document.getElementById('zoom-img');
+        if (zoomActivo) {
+            img.style.maxWidth = 'none';
+            img.style.maxHeight = 'none';
+            img.style.width = '200%';
+            img.style.cursor = 'zoom-out';
+        } else {
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.width = 'auto';
+            img.style.cursor = 'zoom-in';
+        }
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { cerrarZoom(); }
+    });
+</script>
 @endsection
