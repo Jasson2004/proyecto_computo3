@@ -47,17 +47,17 @@ Aplicación web que permite administrar publicaciones, categorías, autores e im
 
 # Base de datos
 
-El proyecto utiliza **PostgreSQL** como gestor de base de datos.
+El proyecto utiliza **PostgreSQL** como gestor de base de datos principal.
 
 La base de datos utilizada se llama:
 
 `blog_semana_sistemas`
 
-La información original del proyecto se encontraba almacenada en SQLite. Posteriormente se realizó la migración de estructura y la importación de los registros existentes hacia PostgreSQL.
+La información original del proyecto se encontraba almacenada en SQLite. Posteriormente se realizó la migración de la estructura y la importación de los registros existentes hacia PostgreSQL.
 
-Se conservaron los datos de las siguientes tablas principales:
+Se importaron los registros de las siguientes tablas principales:
 
-| Tabla | Registros importados |
+| Tabla | Registros |
 |---|---:|
 | users | 3 |
 | categories | 7 |
@@ -66,7 +66,7 @@ Se conservaron los datos de las siguientes tablas principales:
 | post_user | 32 |
 | **Total** | **141** |
 
-Se verificó que los registros importados coincidieran con los datos originales y que las relaciones entre publicaciones, usuarios, categorías e imágenes no presentaran registros huérfanos.
+Se verificaron las cantidades de registros importados y las relaciones entre publicaciones, usuarios, categorías e imágenes.
 
 ## Respaldo de la base de datos
 
@@ -74,19 +74,19 @@ El repositorio contiene un respaldo SQL de PostgreSQL:
 
 `db/respaldo_blog_postgres.sql`
 
-Este archivo permite restaurar la base de datos con su estructura y los registros guardados.
+Este archivo permite restaurar la estructura y los registros de la base de datos.
 
-También se conserva la base de datos SQLite original como respaldo:
+También se conserva la base de datos SQLite original:
 
 `db/database.sqlite`
 
-**Importante:** el respaldo SQL ya contiene las tablas y los registros. No es necesario ejecutar `migrate:fresh`, `db:wipe` ni volver a importar los datos manualmente.
+Este archivo se mantiene como respaldo de la información anterior a la migración.
 
 ---
 
 # Instalación y ejecución local con PostgreSQL
 
-Esta modalidad ejecuta Laravel directamente en Ubuntu y utiliza PostgreSQL desde el entorno Docker.
+En esta modalidad, Laravel se ejecuta directamente en Ubuntu y PostgreSQL funciona mediante Docker.
 
 ## 1. Clonar el repositorio
 
@@ -103,7 +103,7 @@ composer install
 
 ## 3. Iniciar PostgreSQL y pgAdmin
 
-Desde la carpeta donde se encuentra el proyecto Docker del servidor:
+Desde la carpeta del entorno Docker del servidor:
 
 ```bash
 cd ~/server-laravel-docker
@@ -118,7 +118,13 @@ docker exec servidor_postgres createdb -U postgres blog_semana_sistemas
 
 ## 5. Restaurar el respaldo SQL
 
-Desde la carpeta raíz del proyecto Laravel, ejecutar:
+Regresar a la carpeta raíz del proyecto Laravel:
+
+```bash
+cd ~/proyecto_computo3
+```
+
+Ejecutar la restauración:
 
 ```bash
 docker exec -i servidor_postgres psql -U postgres -d blog_semana_sistemas < db/respaldo_blog_postgres.sql
@@ -126,7 +132,7 @@ docker exec -i servidor_postgres psql -U postgres -d blog_semana_sistemas < db/r
 
 ## 6. Configurar el archivo de entorno
 
-Regresar a la carpeta del proyecto Laravel:
+Crear el archivo `.env`:
 
 ```bash
 cp .env.example .env
@@ -157,7 +163,7 @@ Limpiar la configuración almacenada:
 php artisan config:clear
 ```
 
-## 8. Copiar las imágenes del proyecto
+## 8. Copiar las imágenes
 
 Desde la raíz del proyecto:
 
@@ -165,7 +171,7 @@ Desde la raíz del proyecto:
 cp -r db/imagenes/. storage/app/public/
 ```
 
-Crear el enlace simbólico de almacenamiento:
+Crear el enlace simbólico:
 
 ```bash
 php artisan storage:link
@@ -187,11 +193,11 @@ Abrir en el navegador:
 
 Esta modalidad utiliza el entorno Docker proporcionado para ejecutar los proyectos Laravel.
 
-El proyecto Laravel debe ubicarse dentro de la carpeta `www` del entorno Docker.
+El proyecto debe ubicarse dentro de la carpeta `www` del entorno Docker.
 
 ## 1. Iniciar el entorno Docker
 
-Desde la carpeta `server-laravel-docker`:
+Desde la carpeta del servidor:
 
 ```bash
 cd ~/server-laravel-docker
@@ -202,24 +208,26 @@ docker compose up -d
 
 ```bash
 cd ~/server-laravel-docker/www
-git clone https://github.com/Jasson2004/proyecto_computo3.git
+git clone https://github.com/Jasson2004/proyecto_computo3.git proyecto-computo3
 ```
+
+Se utiliza el nombre `proyecto-computo3` porque el entorno del servidor utiliza el nombre de la carpeta para generar la dirección local del proyecto.
 
 ## 3. Instalar dependencias
 
 Utilizando el alias `lv` configurado en el entorno de la asignatura:
 
 ```bash
-lv proyecto_computo3 composer install
+lv proyecto-computo3 composer install
 ```
 
 ## 4. Configurar el entorno
 
 ```bash
-lv proyecto_computo3 cp .env.example .env
+lv proyecto-computo3 cp .env.example .env
 ```
 
-Editar el `.env` del proyecto y configurar la conexión a PostgreSQL:
+Editar el archivo `.env` del proyecto y configurar la conexión:
 
 ```env
 DB_CONNECTION=pgsql
@@ -235,13 +243,13 @@ En esta modalidad se utiliza `db` como host porque Laravel y PostgreSQL se comun
 ## 5. Generar la clave de Laravel
 
 ```bash
-lv proyecto_computo3 php artisan key:generate
+lv proyecto-computo3 php artisan key:generate
 ```
 
 Limpiar la configuración:
 
 ```bash
-lv proyecto_computo3 php artisan config:clear
+lv proyecto-computo3 php artisan config:clear
 ```
 
 ## 6. Crear la base de datos
@@ -252,15 +260,15 @@ Desde la terminal del equipo anfitrión:
 docker exec servidor_postgres createdb -U postgres blog_semana_sistemas
 ```
 
-## 7. Restaurar los datos de PostgreSQL
+## 7. Restaurar el respaldo PostgreSQL
 
-Ejecutar desde la carpeta del proyecto:
+Desde la carpeta del proyecto clonado:
 
 ```bash
-cd ~/server-laravel-docker/www/proyecto_computo3
+cd ~/server-laravel-docker/www/proyecto-computo3
 ```
 
-Luego:
+Ejecutar:
 
 ```bash
 docker exec -i servidor_postgres psql -U postgres -d blog_semana_sistemas < db/respaldo_blog_postgres.sql
@@ -269,13 +277,13 @@ docker exec -i servidor_postgres psql -U postgres -d blog_semana_sistemas < db/r
 ## 8. Copiar las imágenes
 
 ```bash
-lv proyecto_computo3 cp -r db/imagenes/. storage/app/public/
+lv proyecto-computo3 cp -r db/imagenes/. storage/app/public/
 ```
 
 Crear el enlace simbólico:
 
 ```bash
-lv proyecto_computo3 php artisan storage:link
+lv proyecto-computo3 php artisan storage:link
 ```
 
 ## 9. Acceder al proyecto
@@ -345,10 +353,11 @@ db/
 # Consideraciones importantes
 
 - PostgreSQL es el gestor de base de datos utilizado actualmente por el proyecto.
-- El respaldo SQL incluye la estructura y los registros de la base de datos.
-- Para una instalación desde el respaldo, primero se crea la base de datos y después se restaura el archivo SQL.
+- El respaldo SQL contiene la estructura y los registros de PostgreSQL.
+- Para instalar el proyecto desde el respaldo, primero se crea la base de datos y después se restaura el archivo SQL.
 - No ejecutar `php artisan migrate:fresh` ni `php artisan db:wipe` después de restaurar el respaldo, ya que estos comandos pueden eliminar información.
 - No es necesario volver a importar los registros de SQLite: ya están incluidos en el respaldo PostgreSQL.
+- Las credenciales de demostración se proporcionan para facilitar la revisión del proyecto.
 
 ## Repositorio
 
